@@ -16,3 +16,4 @@ class Solution:
         seta=set(a)
         setb=set(b)
         return list(seta.intersection(setb))
+
