@@ -19,30 +19,55 @@ Constraints:
 3 ≤ arr.size() ≤ 103
 -105 ≤ arr[i], target ≤ 105
 '''
-class Solution:
-    def countTriplets(self, arr, target):
-        n=len(arr)
-        count=0
-        for i in range(n-2):
-            j,k=i+1,n-1
-            while j<k:
-                cur=arr[i]+arr[j]+arr[k]
-                if cur==target:
-                    left,right=0,0
-                    t1,t2=arr[j],arr[k]
-                    while j<=k and arr[j]==t1:
-                        left+=1
-                        j+=1
-                    while k>=j and arr[k]==t2:
-                        right+=1
-                        k-=1
-                    if t1==t2:
-                        count+=int(left*(left-1)/2)
-                    else:
-                        count+=left*right
-                elif cur<target:
-                    j+=1
+
+def countTriplets(arr, target):
+    n = len(arr)
+    res = 0
+
+    # Iterate through each element as the first element of the triplet
+    for i in range(n - 2):
+        left = i + 1
+        right = n - 1
+
+        # Use two-pointer approach to find triplets
+        while left < right:
+
+            # Calculate the sum of the triplet
+            sum = arr[i] + arr[left] + arr[right]
+
+            # If sum is smaller, move to bigger values
+            if sum < target:
+                left += 1
+
+            # If sum is greater, move to smaller values
+            elif sum > target:
+                right -= 1
+
+            # If sum is equal to target
+            else:
+                ele1 = arr[left]
+                ele2 = arr[right]
+                cnt1 = 0
+                cnt2 = 0
+
+                # Count frequency of the current value at 'left'
+                while left <= right and arr[left] == ele1:
+                    left += 1
+                    cnt1 += 1
+
+                # Count frequency of the current value at 'right'
+                while left <= right and arr[right] == ele2:
+                    right -= 1
+                    cnt2 += 1
+
+                # If both the elements are the same, then count of pairs 
+                # = the number of ways to choose 2 elements among cnt1 elements
+                if ele1 == ele2:
+                    res += (cnt1 * (cnt1 - 1)) // 2
+
+                # If the elements are different, then count of pairs 
+                # = product of the count of both elements
                 else:
-                    k-=1
-        return count
-                    
+                    res += (cnt1 * cnt2)
+
+    return res
